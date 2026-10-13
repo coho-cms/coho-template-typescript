@@ -10,6 +10,8 @@
 import type { Coho } from './coho/index.ts';
 
 export * from './coho/index.ts';
+export { catalog } from './catalog.ts';
+export type { CatalogEntry } from './catalog.ts';
 
 /**
  * An example of a read of your own: the home page, and everything it links to two

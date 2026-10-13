@@ -22,6 +22,34 @@ It comes with the types of the `cli-next-blog` sample, generated, so it builds a
 
 6. **Choose where it is published.** The release workflow publishes to GitHub Packages; change `registry-url` in `.github/workflows/release.yml` for another registry. Then remove `"private": true` from `package.json`, which is there so nothing is published by accident.
 
+## See what's there
+
+`npm run catalog` lists every content type and how many entries it has, read live from delivery with a delivery key, the way an app reads it. Add these to `.env`:
+
+```
+COHO_DELIVERY_URL=https://delivery.coho.example
+COHO_DELIVERY_KEY=<a delivery key for the project>
+COHO_DELIVERY_REF=qa
+```
+
+`COHO_DELIVERY_REF` is the tag or environment to read; leave it empty to read the ref in `coho.config.json`. A key made for one environment reads only that one. Then:
+
+```bash
+npm run catalog
+```
+
+```
+Content on qa:
+
+  blogPost     Blog post         2
+  tag          Tag               3
+  teamMember   Team member       2
+
+  7 entries in 3 types
+```
+
+It is also part of the library, as `catalog(config)`, in `src/catalog.ts`: an example of reading content that uses the generated types.
+
 ## When the content types change
 
 Cut a tag in Coho, then:

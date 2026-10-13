@@ -22,6 +22,7 @@
     "pull": "coho-codegen pull",
     "generate": "coho-codegen generate",
     "check": "coho-codegen check",
+    "catalog": "node scripts/catalog.ts",
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json",
     "test": "node --test test/*.test.ts",
