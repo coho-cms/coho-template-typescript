@@ -1,0 +1,51 @@
+name: Release
+
+# Builds the library from a Coho tag and publishes it. Run it by hand once the tag is
+# cut, naming the tag and the package version to publish.
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: The Coho tag to build from, such as v1.4.0
+        required: true
+      version:
+        description: The package version to publish, such as 1.4.0
+        required: true
+
+permissions:
+  contents: read
+  # GitHub Packages needs this to publish. Remove it for any other registry.
+  packages: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+          # Where your packages are published.
+          registry-url: https://npm.pkg.github.com
+      - run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Inputs reach the shell as variables, never pasted into the script, so a
+      # crafted tag name cannot run commands.
+      - name: Pull the type model for the tag
+        run: npm run pull -- --ref "$REF"
+        env:
+          REF: ${{ inputs.ref }}
+          COHO_TOKEN: ${{ secrets.COHO_TOKEN }}
+      - run: npm run generate
+      - run: npm run typecheck
+      - run: npm test
+      - name: Set the version
+        run: npm version "$VERSION" --no-git-tag-version
+        env:
+          VERSION: ${{ inputs.version }}
+      # Builds first, through prepack.
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

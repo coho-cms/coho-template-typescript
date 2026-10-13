@@ -1,0 +1,39 @@
+{
+  "name": "@your-org/content",
+  "version": "0.1.0",
+  "description": "Typed content for our sites and services, generated from Coho CMS.",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "pull": "coho-codegen pull",
+    "generate": "coho-codegen generate",
+    "check": "coho-codegen check",
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "node --test test/*.test.ts",
+    "prepack": "coho-codegen check && npm run build"
+  },
+  "peerDependencies": {
+    "@coho-cms/delivery": "^0.1.0-alpha.1"
+  },
+  "devDependencies": {
+    "@coho-cms/codegen": "^0.1.0-alpha.1",
+    "@coho-cms/delivery": "^0.1.0-alpha.1",
+    "@types/node": "24.19.0",
+    "typescript": "7.0.2"
+  }
+}
