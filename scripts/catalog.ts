@@ -1,24 +1,62 @@
 /**
- * `npm run catalog`: every content type, and how many entries each has, read live from
- * delivery the way an app reads it, with a delivery key.
+ * `npm run catalog`: every content type, and how many entries each has, read the way an
+ * app reads them.
  *
- * The project comes from coho.config.json; the rest from the environment or `.env`:
- * COHO_DELIVERY_URL, COHO_DELIVERY_KEY and, to read another tag or environment than
- * the config's ref, COHO_DELIVERY_REF.
+ * Released content by default, from delivery, with COHO_DELIVERY_URL and
+ * COHO_DELIVERY_KEY. The ref is `--ref`, or COHO_REF, or the ref in coho.config.json.
+ *
+ * `--preview` reads unreleased content instead, live through Coho, with the COHO_TOKEN
+ * this library pulls its types with, or COHO_PREVIEW_TOKEN if that is set. The ref is
+ * `--ref`, or `dev`.
+ *
+ * The project, and for a preview Coho's URL and the account, come from coho.config.json
+ * unless the environment or `.env` sets them, under the names configFromEnv reads in an app.
  */
 import { existsSync, readFileSync } from 'node:fs';
-import { CohoDeliveryError } from '@coho-cms/delivery';
+import { parseArgs } from 'node:util';
+import { CohoDeliveryError, configFromEnv } from '@coho-cms/delivery';
+import type { ContentConfig } from '@coho-cms/delivery';
 import { catalog } from '../src/index.ts';
 
 if (existsSync('.env')) process.loadEnvFile('.env');
 
-const config = JSON.parse(readFileSync('coho.config.json', 'utf8')) as { project?: string; ref?: string; typeModel?: string };
-const url = process.env['COHO_DELIVERY_URL'] ?? '';
-const key = process.env['COHO_DELIVERY_KEY'] ?? '';
-const ref = process.env['COHO_DELIVERY_REF'] || config.ref || '';
+const { values: flags } = parseArgs({ options: { preview: { type: 'boolean', default: false }, ref: { type: 'string' } } });
+const config = JSON.parse(readFileSync('coho.config.json', 'utf8')) as {
+  url?: string;
+  account?: string;
+  project?: string;
+  ref?: string;
+  typeModel?: string;
+};
 
-if (url === '' || key === '' || ref === '' || (config.project ?? '') === '') {
-  console.error('npm run catalog needs COHO_DELIVERY_URL and COHO_DELIVERY_KEY in .env (see .env.example), and the project in coho.config.json.');
+// The variables an app would set, with gaps filled from coho.config.json.
+const env: Record<string, string | undefined> = { ...process.env };
+const fill = (name: string, value: string | undefined): void => {
+  if ((env[name] ?? '').trim() === '') env[name] = value;
+};
+fill('COHO_PROJECT', config.project);
+if (flags.preview) {
+  fill('COHO_PREVIEW_TOKEN', env['COHO_TOKEN']);
+  if ((env['COHO_PREVIEW_TOKEN'] ?? '').trim() === '') {
+    console.error('npm run catalog -- --preview needs COHO_TOKEN in .env, a project token with read access. See .env.example.');
+    process.exit(1);
+  }
+  fill('COHO_URL', config.url);
+  fill('COHO_ACCOUNT', config.account);
+  delete env['COHO_DELIVERY_KEY'];
+  // Not the config's ref: that is a tag, and a preview reads branches.
+  env['COHO_REF'] = flags.ref ?? 'dev';
+} else {
+  delete env['COHO_PREVIEW_TOKEN'];
+  fill('COHO_REF', config.ref);
+  if (flags.ref !== undefined) env['COHO_REF'] = flags.ref;
+}
+
+let read: ContentConfig;
+try {
+  read = configFromEnv(env);
+} catch (error) {
+  console.error(`npm run catalog: ${(error as Error).message}. See .env.example.`);
   process.exit(1);
 }
 
@@ -26,19 +64,19 @@ if (url === '' || key === '' || ref === '' || (config.project ?? '') === '') {
 const model = JSON.parse(readFileSync(config.typeModel ?? 'coho-ir.json', 'utf8')) as { types?: Record<string, { name?: string }> };
 
 try {
-  const counted = await catalog({ url, project: config.project ?? '', key, ref });
+  const counted = await catalog(read);
   const rows = counted.map(({ type, count }) => [type, model.types?.[type]?.name ?? '', String(count)] as const);
   const width = (column: 0 | 1): number => Math.max(...rows.map((row) => row[column].length));
   const total = counted.reduce((sum, { count }) => sum + count, 0);
 
-  console.log(`Content on ${ref}:\n`);
+  console.log(`${flags.preview ? 'Unreleased content' : 'Content'} on ${read.ref}:\n`);
   for (const [type, name, count] of rows) {
     console.log(`  ${type.padEnd(width(0))}   ${name.padEnd(width(1))}   ${count.padStart(5)}`);
   }
   console.log(`\n  ${total} ${total === 1 ? 'entry' : 'entries'} in ${counted.length} ${counted.length === 1 ? 'type' : 'types'}`);
 } catch (error) {
   if (!(error instanceof CohoDeliveryError)) throw error;
-  // Delivery's own words, such as KEY_REQUIRED or PROJECT_NOT_FOUND.
+  // Coho's own words, such as KEY_REQUIRED or PROJECT_NOT_FOUND, and what to check.
   console.error(error.message);
   process.exit(1);
 }

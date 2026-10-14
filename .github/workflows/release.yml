@@ -29,8 +29,6 @@ jobs:
           # Where your packages are published.
           registry-url: https://npm.pkg.github.com
       - run: npm ci
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # Inputs reach the shell as variables, never pasted into the script, so a
       # crafted tag name cannot run commands.
       - name: Pull the type model for the tag

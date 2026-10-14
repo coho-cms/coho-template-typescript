@@ -29,11 +29,11 @@
     "prepack": "coho-codegen check && npm run build"
   },
   "peerDependencies": {
-    "@coho-cms/delivery": "^0.1.0-alpha.1"
+    "@coho-cms/delivery": "^0.1.0-alpha.3"
   },
   "devDependencies": {
-    "@coho-cms/codegen": "^0.1.0-alpha.1",
-    "@coho-cms/delivery": "^0.1.0-alpha.1",
+    "@coho-cms/codegen": "0.1.0-alpha.3",
+    "@coho-cms/delivery": "0.1.0-alpha.3",
     "@types/node": "24.19.0",
     "typescript": "7.0.2"
   }

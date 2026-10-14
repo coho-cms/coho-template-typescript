@@ -9,8 +9,6 @@ on:
 
 permissions:
   contents: read
-  # To install the @coho-cms packages from GitHub Packages (see .npmrc).
-  packages: read
 
 jobs:
   check:
@@ -21,10 +19,7 @@ jobs:
         with:
           node-version: 24
           cache: npm
-          registry-url: https://npm.pkg.github.com
       - run: npm ci
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # The generated code must be exactly what the committed type model generates.
       - name: Generated code is up to date
         run: npm run check

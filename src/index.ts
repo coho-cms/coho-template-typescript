@@ -10,6 +10,9 @@
 import type { Coho } from './coho/index.ts';
 
 export * from './coho/index.ts';
+// So an app configures the library from its environment with one import: released
+// content with a delivery key, or a preview with a project token.
+export { configFromEnv } from '@coho-cms/delivery';
 export { catalog } from './catalog.ts';
 export type { CatalogEntry } from './catalog.ts';
 
