@@ -3,3 +3,4 @@ dist/
 *.tgz
 .env
 coho-ir.json.tmp
+.idea/
