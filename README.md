@@ -55,7 +55,7 @@ npm run catalog -- --preview
 npm run catalog -- --preview --ref feature/spring-campaign
 ```
 
-It is also part of the library, as `catalog(config)`, in `src/catalog.ts`: an example of reading content that uses the generated types.
+Its code is in `scripts/`, an example of reading content with the generated types. It is a development tool: `scripts/` is not built or published, so it is not part of the library.
 
 ## When the content types change
 
@@ -109,10 +109,11 @@ const coho = createCoho({
 });
 ```
 
-The answers are the same shapes, so the app's code doesn't change. To choose by deployment rather than in code, configure the library from the environment:
+The answers are the same shapes, so the app's code doesn't change. To choose by deployment rather than in code, build the config from the environment with `configFromEnv`, from `@coho-cms/delivery`:
 
 ```ts
-import { configFromEnv, createCoho } from '@acme/content';
+import { createCoho } from '@acme/content';
+import { configFromEnv } from '@coho-cms/delivery';
 
 const coho = createCoho(configFromEnv(process.env));
 ```

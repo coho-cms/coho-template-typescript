@@ -1,6 +1,6 @@
 import { createDeliveryClient } from '@coho-cms/delivery';
 import type { ContentConfig } from '@coho-cms/delivery';
-import { shape } from './coho/index.ts';
+import { shape } from '../src/coho/index.ts';
 
 /** How many entries one content type has. */
 export interface CatalogEntry
@@ -15,9 +15,9 @@ export interface CatalogEntry
  * Every content type this library was generated for, with how many entries each has on
  * the config's ref. `npm run catalog` prints it.
  *
- * An example of reading content with the library. The types come from the generated
- * module, and each is counted by paging through its list, a hundred entries a request,
- * so this is a tool for looking around rather than something to run on every page view.
+ * A development tool, not part of the library: it is not built or published. The types
+ * come from the generated module, and each is counted by paging through its list, a
+ * hundred entries a request, so it is for looking around, not for every page view.
  */
 export async function catalog(config: ContentConfig): Promise<CatalogEntry[]>
 {

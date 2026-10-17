@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { catalog, shape } from '../src/index.ts';
+import { catalog } from '../scripts/catalog-entries.ts';
+import { shape } from '../src/index.ts';
 
 /** Holds for any project's types, so it keeps passing after you regenerate for yours. */
 test('the catalog counts every type, a hundred entries a request', async () =>

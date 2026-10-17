@@ -16,7 +16,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { parseArgs } from 'node:util';
 import { CohoDeliveryError, configFromEnv } from '@coho-cms/delivery';
 import type { ContentConfig } from '@coho-cms/delivery';
-import { catalog } from '../src/index.ts';
+import { catalog } from './catalog-entries.ts';
 
 if (existsSync('.env')) process.loadEnvFile('.env');
 
