@@ -4,7 +4,7 @@ The starting point for your content library: a TypeScript package, generated fro
 
 **In testing.** The `@coho-cms` packages this depends on are alphas on npm.
 
-It is a skeleton: it holds no content types, so it does not build until you generate yours in step 5. That writes your project's type model to `coho-ir.json`, and a file per content type, with `index.ts` to export them, to `src/coho/`.
+It is a skeleton. `coho-ir.json` is an empty placeholder type model, and `src/coho/index.ts` is what it generates: no content types, only the untyped reads, so the template builds as it stands. Generating yours in step 5 replaces both, with your project's type model and a file per content type.
 
 ## Set up
 
