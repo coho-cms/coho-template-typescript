@@ -3,10 +3,11 @@ import type { ContentConfig } from '@coho-cms/delivery';
 import { shape } from './coho/index.ts';
 
 /** How many entries one content type has. */
-export interface CatalogEntry {
-  /** The type's slug. */
-  readonly type: string;
-  readonly count: number;
+export interface CatalogEntry
+{
+    /** The type's slug. */
+    readonly type: string;
+    readonly count: number;
 }
 
 /**
@@ -17,19 +18,22 @@ export interface CatalogEntry {
  * module, and each is counted by paging through its list, a hundred entries a request,
  * so this is a tool for looking around rather than something to run on every page view.
  */
-export async function catalog(config: ContentConfig): Promise<CatalogEntry[]> {
-  const delivery = createDeliveryClient({ ...config, cache: false });
-  const counted: CatalogEntry[] = [];
+export async function catalog(config: ContentConfig): Promise<CatalogEntry[]>
+{
+    const delivery = createDeliveryClient({ ...config, cache: false });
+    const counted: CatalogEntry[] = [];
 
-  for (const type of Object.keys(shape)) {
-    let count = 0;
-    let more = true;
-    while (more) {
-      const page = await delivery.entries(config.ref, { type, limit: 100, offset: count });
-      count += page.roots.length;
-      more = page.hasMore && page.roots.length > 0;
+    for (const type of Object.keys(shape))
+    {
+        let count = 0;
+        let more = true;
+        while (more)
+        {
+            const page = await delivery.entries(config.ref, { type, limit: 100, offset: count });
+            count += page.roots.length;
+            more = page.hasMore && page.roots.length > 0;
+        }
+        counted.push({ type, count });
     }
-    counted.push({ type, count });
-  }
-  return counted;
+    return counted;
 }

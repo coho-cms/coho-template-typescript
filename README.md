@@ -1,10 +1,10 @@
 # coho-template-typescript
 
-The starting point for your content library: a TypeScript package, generated from your Coho CMS project's content types, that your sites and services install. Each content type becomes an interface, and the library's client returns them.
+The starting point for your content library: a TypeScript package, generated from your Coho CMS project's content types, that your sites and services install. Each content type becomes an interface in its own file, and the library's client returns them.
 
 **In testing.** The `@coho-cms` packages this depends on are alphas on npm.
 
-It comes with the types of the `cli-next-blog` sample, generated, so it builds as it stands. Setting it up replaces them with yours.
+It is a skeleton: it holds no content types, so it does not build until you generate yours in step 5. That writes your project's type model to `coho-ir.json`, and a file per content type, with `index.ts` to export them, to `src/coho/`.
 
 ## Set up
 
@@ -74,6 +74,8 @@ Your own reads go in `src/index.ts`, built on the generated ones. `src/coho/` is
 
 ## Using the library in an app
 
+For a project with a `blogPost` type:
+
 ```bash
 npm install @acme/content @coho-cms/delivery
 ```
@@ -142,9 +144,12 @@ Node 22.18 or later, which runs the TypeScript tests directly. The published lib
 
 ```bash
 npm run typecheck
+npm run lint
 npm test
 npm run build
 ```
+
+`npm run lint -- --fix` reformats: Allman braces, an opening brace on its own line, and four-space indents. The generated `src/coho/` is not linted; codegen writes it in the same style.
 
 ## License
 

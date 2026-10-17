@@ -25,6 +25,7 @@
     "catalog": "node scripts/catalog.ts",
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json",
+    "lint": "eslint .",
     "test": "node --test test/*.test.ts",
     "prepack": "coho-codegen check && npm run build"
   },
@@ -32,9 +33,13 @@
     "@coho-cms/delivery": "^0.1.0-alpha.3"
   },
   "devDependencies": {
+    "@babel/core": "8.0.7",
+    "@babel/eslint-parser": "8.0.7",
     "@coho-cms/codegen": "0.1.0-alpha.3",
     "@coho-cms/delivery": "0.1.0-alpha.3",
+    "@stylistic/eslint-plugin": "5.10.0",
     "@types/node": "24.19.0",
+    "eslint": "10.13.0",
     "typescript": "7.0.2"
   }
 }
