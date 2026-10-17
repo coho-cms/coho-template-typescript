@@ -26,8 +26,10 @@ export interface Coho
 {
     /** The entry with this slug, whatever its type, or null. */
     bySlug(slug: string, options?: runtime.ReadOptions): Promise<AnyEntry | null>;
+
     /** The entry with this id, whatever its type, or null. */
     byId(id: string, options?: runtime.ReadOptions): Promise<AnyEntry | null>;
+
     /** The entries that exist, sorted by id. Ids not on the ref are left out. */
     byIds(ids: readonly string[], options?: runtime.ReadOptions): Promise<AnyEntry[]>;
 }

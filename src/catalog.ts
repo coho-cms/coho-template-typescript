@@ -7,6 +7,7 @@ export interface CatalogEntry
 {
     /** The type's slug. */
     readonly type: string;
+
     readonly count: number;
 }
 
