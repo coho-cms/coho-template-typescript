@@ -2,13 +2,11 @@
 
 The starting point for your content library: a TypeScript package, generated from your Coho CMS project's content types, that your sites and services install. Each content type becomes an interface in its own file, and the library's client returns them.
 
-**In testing.** The `@coho-cms` packages this depends on are alphas on npm.
-
 It is a skeleton. `coho-ir.json` is an empty placeholder type model, and `src/coho/index.ts` is what it generates: no content types, only the untyped reads, so the template builds as it stands. Generating yours in step 5 replaces both, with your project's type model and a file per content type.
 
 ## Set up
 
-1. **Create your repository** from this template, or let `npm create coho@alpha` do steps 1 to 3 for you.
+1. **Create your repository** from this template, or let `npm create coho` do steps 1 to 3 for you.
 2. **Name the package** in `package.json`, under your own scope, such as `@acme/content`.
 3. **Point it at your project** in `coho.config.json`: the Coho URL, your account and project ids, and the tag to generate from.
 4. **Give it a project token** with read access, as `COHO_TOKEN`: in `.env` for local runs (copy `.env.example`), and as a secret in CI.
