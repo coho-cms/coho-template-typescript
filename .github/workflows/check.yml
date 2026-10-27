@@ -18,8 +18,12 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 24
-          cache: npm
-      - run: npm ci
+      # `npm install`, not `npm ci`, and no `cache: npm`: both want a committed
+      # package-lock.json, and a template has none. create-coho's bundler deletes any
+      # lock it finds, so a scaffolded library resolves its own tree -- pinning here
+      # would test a tree nobody is given. The other four templates install unpinned
+      # too, which is why this was the only template whose check never ran.
+      - run: npm install
       # The generated code must be exactly what the committed type model generates.
       - name: Generated code is up to date
         run: npm run check
