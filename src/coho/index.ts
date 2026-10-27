@@ -9,7 +9,7 @@ export type { Linked, Unresolved } from "@coho-cms/delivery";
 /** Any content type on this ref. Switch on `_type` to narrow it. */
 export type AnyEntry = never;
 
-/** What the runtime needs to hydrate each type: its links, and the fields it always has. */
+/** What the runtime needs to hydrate each type: its links, the fields it always has, and the components each repeater holds. */
 export const shape: runtime.Shape = {};
 
 /** Where these types came from, for reporting which release a build was made from. */
